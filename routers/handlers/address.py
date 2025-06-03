@@ -28,7 +28,7 @@ async def china_address(callback: CallbackQuery):
         f"{address['name2']}\n\n"
         f"{address['name3']}{user_data['code']}</code>"
     )
-    photo_filenames = ["./images/taobao.jpeg", "./images/pinduoduo.jpeg", "./images/poizon.jpeg", "./images/1688.jpeg"]
+    photo_filenames = ["./images/taobao.jpg", "./images/pinduoduo.jpg", "./images/poizon.jpg", "./images/1688.jpg"]
     media_group = [InputMediaPhoto(media=FSInputFile(filename)) for filename in photo_filenames]
 
     await callback.message.edit_text(info, parse_mode="HTML")
@@ -116,7 +116,7 @@ async def show_china_address(chat_id: str, message: Message):
         f"{address['name2']}\n\n"
         f"{address['name3']}{user_data['code']}</code>"
     )
-    photo_filenames = ["./images/taobao.jpeg", "./images/pinduoduo.jpeg", "./images/poizon.jpeg", "./images/1688.jpeg"]
+    photo_filenames = ["./images/taobao.jpg", "./images/pinduoduo.jpg", "./images/poizon.jpg", "./images/1688.jpg"]
     media_group = [InputMediaPhoto(media=FSInputFile(filename)) for filename in photo_filenames]
 
     await message.answer(info, parse_mode="HTML")

@@ -36,7 +36,7 @@ async def get_name(message: types.Message, state: FSMContext):
 async def get_number(message: types.Message, state: FSMContext):
     """Сохраняем номер, запрашиваем город."""
     await state.update_data(number=message.text)
-    await message.answer("Введите ваш город:")
+    await message.answer("Введите ваш адрес:")
     await state.set_state(GetService.city)
 
 @router.message(GetService.city)
@@ -157,8 +157,6 @@ async def save_user_data(callback: CallbackQuery, state: FSMContext):
 
     # Дополнительная информация
     info = (
-        f"Пример как заполнить адрес в приложении:\n"
-        f"(pinduoduo, taobao, 1688, Для получения бесплатного урока по 1688 перейдите по ссылке https://t.me/+ILaAT3qAW5AxNTI6)\n\n"
         f"Нажмите чтобы скопировать:\n\n"
         f"<code>{address['name1']}{response['code']}\n\n"
         f"{address['name2']}\n\n"

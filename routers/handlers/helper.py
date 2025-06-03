@@ -14,15 +14,13 @@ async def helper(message: types.Message):
     user_data = response[0]
 
     info = (
-        f"Пример как заполнить адрес в приложении:\n"
-        f"(pinduoduo, taobao, 1688, Для получения бесплатного урока по 1688 перейдите по ссылке https://t.me/+ILaAT3qAW5AxNTI6)\n\n"
         f"Нажмите чтобы скопировать:\n\n"
         f"<code>{address['name1']}{user_data['code']}\n\n"
         f"{address['name2']}\n\n"
         f"{address['name3']}{user_data['code']}</code>"
     )
 
-    photo_filenames = ["./images/taobao.jpeg", "./images/pinduoduo.jpeg", "./images/poizon.jpeg", "./images/1688.jpeg"]
+    photo_filenames = ["./images/taobao.jpg", "./images/pinduoduo.jpg", "./images/poizon.jpg", "./images/1688.jpg"]
     media_group = [InputMediaPhoto(media=FSInputFile(filename)) for filename in photo_filenames]
 
 
