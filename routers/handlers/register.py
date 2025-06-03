@@ -166,10 +166,10 @@ async def save_user_data(callback: CallbackQuery, state: FSMContext):
     )
 
     photo_filenames = [
-        "./images/taobao.jpeg", 
-        "./images/pinduoduo.jpeg", 
-        "./images/poizon.jpeg", 
-        "./images/1688.jpeg"
+        "./images/taobao.jpg", 
+        "./images/pinduoduo.jpg", 
+        "./images/poizon.jpg", 
+        "./images/1688.jpg"
     ]
     media_group = [InputMediaPhoto(media=FSInputFile(filename)) for filename in photo_filenames]
 
