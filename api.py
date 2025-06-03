@@ -70,6 +70,6 @@ async def send_notification_product_status_bishkek(data: List[dict], api_key: AP
 async def run_api():
     # Запускаем Uvicorn в новом процессе
     process = await asyncio.create_subprocess_exec(
-        'uvicorn', 'api:app', '--host', '0.0.0.0', '--port', '9090', '--reload'
+        'uvicorn', 'api:app', '--host', '0.0.0.0', '--port', '8000', '--reload'
     )
     await process.wait()
