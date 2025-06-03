@@ -7,6 +7,6 @@ router = Router()
 async def main_products(message: Message):
     info = (
         f"Позвоните по этому номеру для помощи:\n\n"
-        f"+996501870037"
+        f"+996500661015"
     )
     await message.answer(info)
