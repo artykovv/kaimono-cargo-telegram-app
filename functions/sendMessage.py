@@ -166,18 +166,11 @@ async def handle_register_success(chat_id: str, max_retries: int = 3):
                 await bot.send_message(chat_id, "🎉")
                 await bot.send_message(chat_id=chat_id, text=user_info, parse_mode="HTML")
 
-                address = await get_address()
+                address = await get_address(telegram_chat_id=chat_id)
                 if not address:
                     await bot.send_message(chat_id, "Ошибка: адрес не найден.")
                     return
-
-                info = (
-                    f"Нажмите чтобы скопировать:\n\n"
-                    f"<code>{address['name1']}{user_data['code']}\n\n"
-                    f"{address['name2']}\n\n"
-                    f"{address['name3']}{user_data['code']}</code>"
-                )
-
+                
                 photo_filenames = [
                     "./images/taobao.jpg", 
                     "./images/pinduoduo.jpg", 
@@ -189,7 +182,7 @@ async def handle_register_success(chat_id: str, max_retries: int = 3):
                 kb = [[types.KeyboardButton(text="Главное меню")]]
                 keyboard = types.ReplyKeyboardMarkup(keyboard=kb, resize_keyboard=True)
 
-                await bot.send_message(chat_id=chat_id, text=info, reply_markup=keyboard, parse_mode="HTML")
+                await bot.send_message(chat_id=chat_id, text=address, reply_markup=keyboard, parse_mode="HTML")
                 await bot.send_media_group(chat_id=chat_id, media=media_group)
                 return
 

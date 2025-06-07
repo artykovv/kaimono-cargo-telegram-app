@@ -66,11 +66,20 @@ async def get_branches():
         response = await client.get(url=url, headers=headers)
         return response.json()
     
-async def get_address():
+async def get_address(telegram_chat_id):
     async with httpx.AsyncClient() as client:
         url = f"{host}/address/"
         response = await client.get(url=url, headers=headers)
-        return response.json()
+        user_data = await get_profile_user(telegram_chat_id=telegram_chat_id)
+        user = user_data[0]
+        address = response.json()
+        info = (
+            f"Нажмите чтобы скопировать:\n\n"
+            f"<code>{address['name1']}{user['numeric_code']}\n"
+            f"{address['name2']}\n"
+            f"{address['name3']}{user['numeric_code']}</code>"
+        )
+        return info
     
 async def update_branch(telegram_chat_id, branch_id):
     async with httpx.AsyncClient() as client:

@@ -18,20 +18,11 @@ async def address(message: Message):
 @router.callback_query(F.data == "address_china")
 async def china_address(callback: CallbackQuery):
     user_id = str(callback.message.chat.id)
-    response = await get_profile_user(telegram_chat_id=user_id)
-    address = await get_address()
-    user_data = response[0]
-
-    info = (
-        f"Нажмите чтобы скопировать:\n\n"
-        f"<code>{address['name1']}{user_data['code']}\n\n"
-        f"{address['name2']}\n\n"
-        f"{address['name3']}{user_data['code']}</code>"
-    )
+    address = await get_address(telegram_chat_id=user_id)
     photo_filenames = ["./images/taobao.jpg", "./images/pinduoduo.jpg", "./images/poizon.jpg", "./images/1688.jpg"]
     media_group = [InputMediaPhoto(media=FSInputFile(filename)) for filename in photo_filenames]
 
-    await callback.message.edit_text(info, parse_mode="HTML")
+    await callback.message.edit_text(address, parse_mode="HTML")
     await callback.message.answer_media_group(media=media_group)
 
 
@@ -106,18 +97,9 @@ async def cancel_branch_change(callback: CallbackQuery):
 
 # Функция для показа адреса Китая
 async def show_china_address(chat_id: str, message: Message):
-    response = await get_profile_user(telegram_chat_id=chat_id)
-    address = await get_address()
-    user_data = response[0]
-
-    info = (
-        f"Нажмите чтобы скопировать:\n\n"
-        f"<code>{address['name1']}{user_data['code']}\n\n"
-        f"{address['name2']}\n\n"
-        f"{address['name3']}{user_data['code']}</code>"
-    )
+    address = await get_address(telegram_chat_id=chat_id)
     photo_filenames = ["./images/taobao.jpg", "./images/pinduoduo.jpg", "./images/poizon.jpg", "./images/1688.jpg"]
     media_group = [InputMediaPhoto(media=FSInputFile(filename)) for filename in photo_filenames]
 
-    await message.answer(info, parse_mode="HTML")
+    await message.answer(address, parse_mode="HTML")
     await message.answer_media_group(media=media_group)
