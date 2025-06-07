@@ -9,7 +9,7 @@ router = Router()
 @router.message(F.text == "📬 Адреса")
 async def address(message: Message):
     kb = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="Поменять филиал", callback_data="address_bishkek")],
+        # [InlineKeyboardButton(text="Поменять филиал", callback_data="address_bishkek")],
         [InlineKeyboardButton(text="Китай адрес", callback_data="address_china")],
     ])
     await message.answer("Выберите:", reply_markup=kb)
