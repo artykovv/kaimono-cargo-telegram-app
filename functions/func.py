@@ -73,7 +73,6 @@ async def get_address(telegram_chat_id):
         user_data = await get_profile_user(telegram_chat_id=telegram_chat_id)
         user = user_data[0]
         address = response.json()
-        user = {'numeric_code': 232323}
         formatted_code = ' '.join(str(user['numeric_code']))
         info = (
             f"Нажмите чтобы скопировать:\n\n"
