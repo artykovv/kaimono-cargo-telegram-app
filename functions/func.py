@@ -1,3 +1,4 @@
+import json
 import httpx
 import asyncio
 
@@ -81,5 +82,17 @@ async def update_branch(telegram_chat_id, branch_id):
         except httpx.HTTPStatusError as e:
             return e.response  # Возвращаем ответ с ошибкой для дальнейшей обработки
         except Exception as e:
-            print(f"Ошибка при обновлении филиала: {e}")
+            return httpx.Response(status_code=500, text=str(e))
+        
+async def get_text(key: str):
+    async with httpx.AsyncClient() as client:
+        try:
+            url = f"{host}/textes/{key}"
+            response = await client.get(url=url, headers=headers)
+            response.raise_for_status()  # Проверка на ошибки HTTP
+            text = response.json()
+            return text["text"]
+        except httpx.HTTPStatusError as e:
+            return e.response  # Возвращаем ответ с ошибкой для дальнейшей обработки
+        except Exception as e:
             return httpx.Response(status_code=500, text=str(e))

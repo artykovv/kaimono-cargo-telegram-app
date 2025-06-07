@@ -1,11 +1,11 @@
 
 from aiogram import types
-from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, FSInputFile
 from aiogram.types import InputMediaPhoto
 
 from typing import List
 from bot import bot
-from functions.func import get_all_users_telegram_chat_ids, get_profile_user
+from functions.func import get_address, get_all_users_telegram_chat_ids, get_profile_user, validate_user_telegram_chat_id
 
 
 async def handle_broadcast_text(text: str, chat_ids: list[int] = None):
@@ -141,3 +141,59 @@ async def send_notification_bihkek(data: List[dict]):
             await bot.send_message(chat_id=telegram_chat_id, text=message, reply_markup=kb)
         except Exception as e:
             print(f"Бот заблокирован пользователем {telegram_chat_id}, сообщение не отправлено. Ошибка: {e}")
+
+
+async def handle_register_success(chat_id: str, max_retries: int = 3):
+    for attempt in range(1, max_retries + 1):
+        try:
+            user = await validate_user_telegram_chat_id(telegram_chat_id=chat_id)
+            if user:
+                response = await get_profile_user(telegram_chat_id=chat_id)
+                if not response:
+                    await bot.send_message(chat_id, "Ошибка: профиль не найден.")
+                    return
+
+                user_data = response[0]
+
+                user_info = (
+                    f"🎉Регистрация прошла успешно🎉\n\n"
+                    f"📃 Профиль 📃 \n\n"
+                    f"👤 ФИО: {user_data['name']}\n"
+                    f"🌍 Город: {user_data['city']}\n"
+                    f"📞 Номер: {user_data['number']}\n\n"
+                    f"🪪 Код: {user_data['code']}\n"
+                )
+                await bot.send_message(chat_id, "🎉")
+                await bot.send_message(chat_id=chat_id, text=user_info, parse_mode="HTML")
+
+                address = await get_address()
+                if not address:
+                    await bot.send_message(chat_id, "Ошибка: адрес не найден.")
+                    return
+
+                info = (
+                    f"Нажмите чтобы скопировать:\n\n"
+                    f"<code>{address['name1']}{user_data['code']}\n\n"
+                    f"{address['name2']}\n\n"
+                    f"{address['name3']}{user_data['code']}</code>"
+                )
+
+                photo_filenames = [
+                    "./images/taobao.jpg", 
+                    "./images/pinduoduo.jpg", 
+                    "./images/poizon.jpg", 
+                    "./images/1688.jpg"
+                ]
+                media_group = [InputMediaPhoto(media=FSInputFile(filename)) for filename in photo_filenames]
+
+                kb = [[types.KeyboardButton(text="Главное меню")]]
+                keyboard = types.ReplyKeyboardMarkup(keyboard=kb, resize_keyboard=True)
+
+                await bot.send_message(chat_id=chat_id, text=info, reply_markup=keyboard, parse_mode="HTML")
+                await bot.send_media_group(chat_id=chat_id, media=media_group)
+                return
+
+        except Exception as e:
+            print(f"[Попытка {attempt}] Ошибка при отправке сообщения пользователю {chat_id}: {e}")
+            if attempt == max_retries:
+                print(f"❌ Все {max_retries} попытки неудачны.")

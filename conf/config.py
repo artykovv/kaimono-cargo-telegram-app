@@ -12,3 +12,5 @@ API_KEYS = {
     os.getenv("API_KEY_2"): "Key2",
     os.getenv("API_KEY_3"): "Key3",
 }
+
+REGISTER_SITE_URL=os.environ.get("REGISTER_SITE_URL")

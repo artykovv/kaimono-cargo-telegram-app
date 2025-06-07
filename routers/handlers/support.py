@@ -1,12 +1,10 @@
 from aiogram import Router, F
 from aiogram.types import Message
+from functions.func import get_text
 
 router = Router()
 
 @router.message(F.text == "⚙️ Поддержка")
 async def main_products(message: Message):
-    info = (
-        f"Позвоните по этому номеру для помощи:\n\n"
-        f"+996500661015"
-    )
-    await message.answer(info)
+    text = await get_text(key="supprot")
+    await message.answer(text)

@@ -16,7 +16,6 @@ from routers.handlers.support import router as support
 from routers.handlers.helper import router as helper
 from routers.handlers.address import router as address
 
-from routers.handlers.register import router as register
 
 from routers.handlers.main_products.productsBishkek import router as productsBishkek
 from routers.handlers.main_products.productsChina import router as productsChina
@@ -27,8 +26,8 @@ bot = Bot(token=TOKEN)
 storage = MemoryStorage()
 dp = Dispatcher(storage=storage)
 
-# Добавляем middleware для ограничения частоты сообщений (например, 2 секунды)
-dp.message.middleware(AntiFloodMiddleware(limit=2))
+# Добавляем middleware для ограничения частоты сообщений (например, 1 секунды)
+dp.message.middleware(AntiFloodMiddleware(limit=1))
 
 dp.include_router(start)
 dp.include_router(menu)
@@ -40,7 +39,6 @@ dp.include_router(support)
 dp.include_router(helper)
 dp.include_router(address)
 
-dp.include_router(register)
 
 dp.include_router(productsBishkek)
 dp.include_router(productsChina)

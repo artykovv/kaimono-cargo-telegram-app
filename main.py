@@ -1,7 +1,7 @@
 import asyncio
 import uvicorn
 from bot import dp, bot
-from api import run_api
+from run_api import run_api
 
 
 async def on_startup():

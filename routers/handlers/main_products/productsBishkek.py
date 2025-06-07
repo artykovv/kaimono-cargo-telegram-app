@@ -1,7 +1,7 @@
 from aiogram import Router, F
 from aiogram.types import CallbackQuery
 
-from functions.func import get_products_status_in_bishkek, get_profile_user
+from functions.func import get_products_status_in_bishkek, get_profile_user, get_text
 
 router = Router()
 
@@ -11,6 +11,7 @@ async def main(callback: CallbackQuery):
     response = await get_products_status_in_bishkek(telegram_chat_id=telegram_chat_id)
     user_branch = await get_profile_user(telegram_chat_id)
     branch_address = user_branch[0]['branch']['address']
+    adress = await get_text(key="adress")
 
     if 'message' in response and response['message'] == "No products found for this client":
         info = "Не найдено товаров для данного клиента."
@@ -33,11 +34,7 @@ async def main(callback: CallbackQuery):
 
         adress = (
             f"\n📍 Можете забрать: {branch_address}\n"
-            f"Для оформления доставки по городу отправьте ваши данные:\n\n"
-            f"1️⃣ Ваш клиентский код\n"
-            f"2️⃣ Точный адрес\n"
-            f"3️⃣ Номер получателя\n\n"
-            f"📲 wa.me/996500661015"
+            f"{adress}"
         )
 
         if products:
