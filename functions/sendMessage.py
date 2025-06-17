@@ -5,7 +5,7 @@ from aiogram.types import InputMediaPhoto
 
 from typing import List
 from bot import bot
-from functions.func import get_address, get_all_users_telegram_chat_ids, get_profile_user, validate_user_telegram_chat_id
+from functions.func import get_address, get_all_users_telegram_chat_ids, get_profile_user, get_text, validate_user_telegram_chat_id
 
 
 async def handle_broadcast_text(text: str, chat_ids: list[int] = None):
@@ -184,6 +184,10 @@ async def handle_register_success(chat_id: str, max_retries: int = 3):
 
                 await bot.send_message(chat_id=chat_id, text=address, reply_markup=keyboard, parse_mode="HTML")
                 await bot.send_media_group(chat_id=chat_id, media=media_group)
+
+
+                text = await get_text(key="check")
+                await bot.send_message(chat_id=chat_id, text=text, reply_markup=keyboard, parse_mode="HTML")
                 return
 
         except Exception as e:
