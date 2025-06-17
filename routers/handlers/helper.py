@@ -6,7 +6,7 @@ from functions.func import get_address, get_profile_user
 router = Router()
 
 
-@router.message(F.text == "📕 Помощь")
+@router.message(F.text == "🇨🇳 Адрес в Китае")
 async def helper(message: types.Message):
     user_id = str(message.chat.id)
     address = await get_address(telegram_chat_id=user_id)

@@ -161,7 +161,7 @@ async def handle_register_success(chat_id: str, max_retries: int = 3):
                     f"👤 ФИО: {user_data['name']}\n"
                     f"🌍 Город: {user_data['city']}\n"
                     f"📞 Номер: {user_data['number']}\n\n"
-                    f"🪪 Код: {user_data['code']}\n"
+                    f"🪪 Код: {user_data['numeric_code']}\n"
                 )
                 await bot.send_message(chat_id, "🎉")
                 await bot.send_message(chat_id=chat_id, text=user_info, parse_mode="HTML")

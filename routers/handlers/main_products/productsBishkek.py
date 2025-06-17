@@ -14,7 +14,7 @@ async def main(callback: CallbackQuery):
     adress = await get_text(key="adress")
 
     if 'message' in response and response['message'] == "No products found for this client":
-        info = "Не найдено товаров для данного клиента."
+        info = "Не найдено"
         await callback.message.edit_text(info)
     else:
         # Формируем базовую информацию о пользователе

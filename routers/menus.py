@@ -15,8 +15,7 @@ async def main_to_menu(message: Message):
         ],
         [
             types.KeyboardButton(text="⚙️ Поддержка"),
-            types.KeyboardButton(text="📕 Помощь"),
-            types.KeyboardButton(text="📬 Адреса"),
+            types.KeyboardButton(text="🇨🇳 Адрес в Китае"),
         ]
     ]
     keyboard = types.ReplyKeyboardMarkup(

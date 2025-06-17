@@ -11,7 +11,7 @@ async def main(callback: CallbackQuery):
     response = await get_products_status_in_china(telegram_chat_id=telegram_chat_id)
 
     if 'message' in response and response['message'] == "No products found for this client":
-        info = "Не найдено товаров для данного клиента."
+        info = "Не найдено"
         await callback.message.edit_text(info)
     else:
         # Формируем базовую информацию о пользователе

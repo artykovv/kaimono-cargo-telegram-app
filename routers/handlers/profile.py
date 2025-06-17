@@ -16,6 +16,6 @@ async def main_products(message: Message):
         f"🌍 Город: {user_data['city']}\n"
         f"📞 Номер: {user_data['number']}\n\n"
 
-        f"🪪 Код: {user_data['code']}\n"
+        f"🪪 Код: {user_data['numeric_code']}\n"
     )
     await message.answer(user_info)
