@@ -1,7 +1,8 @@
 from aiogram import Router, types, F
-from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
 
 from functions.func import get_profile_user
+from conf.config import REGISTER_SITE_URL
 
 router = Router()
 
@@ -18,4 +19,12 @@ async def main_products(message: Message):
 
         f"🪪 Код: KBK{user_data['numeric_code']}\n"
     )
-    await message.answer(user_info)
+
+    update_button = InlineKeyboardButton(
+            text="Изменить",
+            web_app=WebAppInfo(url=f"{REGISTER_SITE_URL}/update")  # укажи свой URL
+        )
+
+    keyboard = InlineKeyboardMarkup(inline_keyboard=[[update_button]])
+    
+    await message.answer(text=user_info, reply_markup=keyboard)

@@ -15,6 +15,7 @@ async def main_to_menu(message: Message):
         ],
         [
             types.KeyboardButton(text="⚙️ Поддержка"),
+            types.KeyboardButton(text="💬 Инструкция"),
             types.KeyboardButton(text="🇨🇳 Адрес в Китае"),
         ]
     ]
@@ -28,4 +29,4 @@ async def main_to_menu(message: Message):
 
 @router.message(Command("my"))
 async def my_chat_id(message: Message):
-    await message.answer(f"Ваш chat_id: {message.chat.id}")
+    await message.answer(f"Ваш телеграм код: {message.chat.id}")

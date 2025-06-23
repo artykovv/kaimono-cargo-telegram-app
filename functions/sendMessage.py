@@ -194,3 +194,31 @@ async def handle_register_success(chat_id: str, max_retries: int = 3):
             print(f"[Попытка {attempt}] Ошибка при отправке сообщения пользователю {chat_id}: {e}")
             if attempt == max_retries:
                 print(f"❌ Все {max_retries} попытки неудачны.")
+
+async def handle_update_success(chat_id: str, max_retries: int = 3):
+    for attempt in range(1, max_retries + 1):
+        try:
+            user = await validate_user_telegram_chat_id(telegram_chat_id=chat_id)
+            if user:
+                response = await get_profile_user(telegram_chat_id=chat_id)
+                if not response:
+                    await bot.send_message(chat_id, "Ошибка: профиль не найден.")
+                    return
+
+                user_data = response[0]
+
+                user_info = (
+                    f"Вы изменили профиль\n\n"
+                    f"📃 Профиль 📃 \n\n"
+                    f"👤 ФИО: {user_data['name']}\n"
+                    f"🌍 Город: {user_data['city']}\n"
+                    f"📞 Номер: {user_data['number']}\n\n"
+                    f"🪪 Код: KBK{user_data['numeric_code']}\n"
+                )
+                await bot.send_message(chat_id=chat_id, text=user_info, parse_mode="HTML")
+                return
+
+        except Exception as e:
+            print(f"[Попытка {attempt}] Ошибка при отправке сообщения пользователю {chat_id}: {e}")
+            if attempt == max_retries:
+                print(f"❌ Все {max_retries} попытки неудачны.")

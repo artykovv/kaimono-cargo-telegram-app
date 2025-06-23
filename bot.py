@@ -15,6 +15,7 @@ from routers.handlers.profile import router as profile
 from routers.handlers.support import router as support
 from routers.handlers.helper import router as helper
 from routers.handlers.address import router as address
+from routers.handlers.instruction import router as instruction
 
 
 from routers.handlers.main_products.productsBishkek import router as productsBishkek
@@ -38,6 +39,7 @@ dp.include_router(profile)
 dp.include_router(support)
 dp.include_router(helper)
 dp.include_router(address)
+dp.include_router(instruction)
 
 
 dp.include_router(productsBishkek)

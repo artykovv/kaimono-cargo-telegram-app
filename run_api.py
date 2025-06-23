@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from api.message.router import router as message
 from api.notification.router import router as notification
 from api.registration.router import router as registration
+from api.client.router import router as client
 
 app = FastAPI()
 
@@ -19,6 +20,7 @@ app.add_middleware(
 app.include_router(message)
 app.include_router(notification)
 app.include_router(registration)
+app.include_router(client)
 
 
 @app.get("/")
