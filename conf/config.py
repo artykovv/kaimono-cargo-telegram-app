@@ -14,3 +14,10 @@ API_KEYS = {
 }
 
 REGISTER_SITE_URL=os.environ.get("REGISTER_SITE_URL")
+
+ADMIN_CHAT_ID = int(os.getenv("ADMIN_CHAT_ID", "-1002765418724"))
+
+REDIS_HOST = os.getenv("REDIS_HOST")
+REDIS_PORT = int(os.getenv("REDIS_PORT"))  # Преобразуем в int
+REDIS_USERNAME = os.getenv("REDIS_USERNAME")
+REDIS_PASSWORD = os.getenv("REDIS_PASSWORD")

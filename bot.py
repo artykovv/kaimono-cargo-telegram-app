@@ -36,7 +36,6 @@ dp.include_router(menu)
 dp.include_router(products)
 dp.include_router(searcher)
 dp.include_router(profile)
-dp.include_router(support)
 dp.include_router(helper)
 dp.include_router(address)
 dp.include_router(instruction)
@@ -46,5 +45,6 @@ dp.include_router(productsBishkek)
 dp.include_router(productsChina)
 dp.include_router(productsTransit)
 
+dp.include_router(support)
 
 
