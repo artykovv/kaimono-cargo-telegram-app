@@ -6,6 +6,7 @@ import redis.asyncio as redis
 import logging
 
 from conf.config import ADMIN_CHAT_ID, REDIS_HOST, REDIS_PASSWORD, REDIS_PORT, REDIS_USERNAME, TOKEN
+from functions.func import get_text
 
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)
@@ -43,7 +44,9 @@ async def safe_redis_operation(operation, *args, **kwargs):
 
 @router.message(F.text == "⚙️ Поддержка")
 async def support_message(message: Message, state: FSMContext):
+    whatsapp = await get_text(key="whatsapp")
     kb = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="WhatsApp", url=f"{whatsapp}")],
         [InlineKeyboardButton(text="Написать через Telegram", callback_data="start_support")]
     ])
     await message.answer("📩 Связь с поддержкой:", reply_markup=kb)
