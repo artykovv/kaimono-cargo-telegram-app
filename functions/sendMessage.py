@@ -189,9 +189,10 @@ async def handle_register_success(chat_id: str, max_retries: int = 3):
             await bot.send_media_group(chat_id=chat_id, media=media_group)
 
             check_message = "📍 После заполнения адреса обязательно отправьте скриншот или любой контент нам на проверку"
+            whatsapp = await get_text(key="whatsapp")
             inline_kb = InlineKeyboardMarkup(inline_keyboard=[
                 [InlineKeyboardButton(text="💬 Инструкция", callback_data="get_instruction")],
-                [InlineKeyboardButton(text="WhatsApp", url="https://wa.me/+1234567890")],
+                [InlineKeyboardButton(text="Поддержка WhatsApp", url=f"{whatsapp}")],
                 [InlineKeyboardButton(text="Проверка через Telegram", callback_data="start_screenshot_check")]
             ])
             await bot.send_message(chat_id=chat_id, text=check_message, reply_markup=inline_kb, parse_mode="HTML")
