@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 
 from fastapi.security.api_key import APIKey
 from conf.api_conf import get_api_key
-from functions.sendMessage import handle_register_success
+from functions.register_success import handle_register_success
 
 router = APIRouter()
 
