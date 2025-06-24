@@ -22,6 +22,9 @@ from routers.handlers.main_products.productsBishkek import router as productsBis
 from routers.handlers.main_products.productsChina import router as productsChina
 from routers.handlers.main_products.productsTransit import router as productsTransit
 
+
+from functions.register_success import router as test
+
 bot = Bot(token=TOKEN)
 
 storage = MemoryStorage()
@@ -46,5 +49,6 @@ dp.include_router(productsChina)
 dp.include_router(productsTransit)
 
 dp.include_router(support)
+dp.include_router(test)
 
 

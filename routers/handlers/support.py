@@ -46,8 +46,9 @@ async def safe_redis_operation(operation, *args, **kwargs):
 async def support_message(message: Message, state: FSMContext):
     whatsapp = await get_text(key="whatsapp")
     kb = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="WhatsApp", url=f"{whatsapp}")],
-        [InlineKeyboardButton(text="Написать через Telegram", callback_data="start_support")]
+        [InlineKeyboardButton(text="Поддержка WhatsApp", url=f"{whatsapp}")],
+        [InlineKeyboardButton(text="Поддержка Telegram", callback_data="start_support")],
+        [InlineKeyboardButton(text="Проверка адреса", callback_data="start_screenshot_check")]
     ])
     await message.answer("📩 Связь с поддержкой:", reply_markup=kb)
     await state.set_state(SupportState.waiting_for_message)
@@ -85,19 +86,19 @@ async def message_forward_to_admin_topic(message: Message, state: FSMContext):
         await state.update_data(thread_id=thread_id)
         await state.set_state(SupportState.in_dialogue)
 
-        await message.reply("✅ Тикет создан. Напишите для общения или /close для закрытия.")
+        await message.reply("✅ Диалог создан. Напишите для общения или /close для закрытия.")
 
         await bot.send_message(
             chat_id=ADMIN_CHAT_ID,
             message_thread_id=thread_id,
-            text="📩 Новый тикет открыт.",
+            text="📩 Новый Диалог открыт.",
             reply_markup=InlineKeyboardMarkup(inline_keyboard=[
-                [InlineKeyboardButton(text="Закрыть тикет", callback_data=f"admin_close_{thread_id}")]
+                [InlineKeyboardButton(text="Закрыть Диалог", callback_data=f"admin_close_{thread_id}")]
             ])
         )
     except Exception as e:
         logger.error(f"Error in message_forward_to_admin_topic: {e}")
-        await message.reply("❌ Ошибка при создании тикета. Попробуйте позже.")
+        await message.reply("❌ Ошибка при создании Диалога. Попробуйте позже.")
 
 @router.message(SupportState.in_dialogue, F.chat.type == "private", F.text != "/close")
 async def reply_to_admin(message: Message, state: FSMContext):
@@ -106,7 +107,7 @@ async def reply_to_admin(message: Message, state: FSMContext):
     
     user_id = await safe_redis_operation(redis_client.get, f"ticket:{thread_id}")
     if not user_id:
-        await message.reply("❌ Тикет не найден или закрыт.")
+        await message.reply("❌ Диалог не найден или закрыт.")
         await state.clear()
         return
 
@@ -124,7 +125,7 @@ async def user_close_ticket(message: Message, state: FSMContext):
     
     user_id = await safe_redis_operation(redis_client.get, f"ticket:{thread_id}")
     if not user_id:
-        await message.reply("❌ Тикет не найден или закрыт.")
+        await message.reply("❌ Диалог не найден или закрыт.")
         await state.clear()
         return
 
@@ -136,12 +137,12 @@ async def user_close_ticket(message: Message, state: FSMContext):
     await bot.send_message(
         chat_id=ADMIN_CHAT_ID,
         message_thread_id=thread_id,
-        text=f"❌ Пользователь {message.from_user.full_name} (ID: {message.from_user.id}) закрыл тикет."
+        text=f"❌ Пользователь {message.from_user.full_name} (ID: {message.from_user.id}) закрыл Диалог."
     )
     
     await safe_redis_operation(redis_client.delete, f"ticket:{thread_id}")
     
-    await message.reply("✅ Тикет закрыт.")
+    await message.reply("✅ Диалог закрыт.")
     await state.clear()
 
 @router.callback_query(F.data.startswith("admin_close_"))
@@ -150,7 +151,7 @@ async def admin_close_ticket_button(cb: CallbackQuery):
     user_id = await safe_redis_operation(redis_client.get, f"ticket:{thread_id}")
     
     if not user_id:
-        await cb.message.reply("❌ Тикет не найден.")
+        await cb.message.reply("❌ Диалог не найден.")
         await cb.answer()
         return
 
@@ -161,12 +162,12 @@ async def admin_close_ticket_button(cb: CallbackQuery):
     
     await bot.send_message(
         user_id,
-        "✅ Тикет закрыт администратором."
+        "✅ Диалог закрыт администратором."
     )
     
     await safe_redis_operation(redis_client.delete, f"ticket:{thread_id}")
     
-    await cb.message.reply("✅ Тикет закрыт.")
+    await cb.message.reply("✅ Диалог закрыт.")
     await cb.answer()
 
 @router.message(F.chat.id == ADMIN_CHAT_ID, F.message_thread_id, ~F.text.startswith("/close"))
@@ -204,7 +205,7 @@ async def admin_close_ticket_command(message: Message):
     user_id = await safe_redis_operation(redis_client.get, f"ticket:{thread_id}")
     
     if not user_id:
-        await message.reply("❌ Тикет не найден.")
+        await message.reply("❌ Диалог не найден.")
         return
 
     await bot.close_forum_topic(
@@ -214,9 +215,9 @@ async def admin_close_ticket_command(message: Message):
     
     await bot.send_message(
         user_id,
-        "✅ Тикет закрыт администратором."
+        "✅ Диалог закрыт администратором."
     )
     
     await safe_redis_operation(redis_client.delete, f"ticket:{thread_id}")
     
-    await message.reply("✅ Тикет закрыт.")
+    await message.reply("✅ Диалог закрыт.")

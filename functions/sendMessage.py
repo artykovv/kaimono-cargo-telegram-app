@@ -144,56 +144,63 @@ async def send_notification_bihkek(data: List[dict]):
 
 
 async def handle_register_success(chat_id: str, max_retries: int = 3):
+    """Handle successful user registration and initiate address verification."""
     for attempt in range(1, max_retries + 1):
         try:
             user = await validate_user_telegram_chat_id(telegram_chat_id=chat_id)
-            if user:
-                response = await get_profile_user(telegram_chat_id=chat_id)
-                if not response:
-                    await bot.send_message(chat_id, "Ошибка: профиль не найден.")
-                    return
-
-                user_data = response[0]
-
-                user_info = (
-                    f"🎉Регистрация прошла успешно🎉\n\n"
-                    f"📃 Профиль 📃 \n\n"
-                    f"👤 ФИО: {user_data['name']}\n"
-                    f"🌍 Город: {user_data['city']}\n"
-                    f"📞 Номер: {user_data['number']}\n\n"
-                    f"🪪 Код: KBK{user_data['numeric_code']}\n"
-                )
-                await bot.send_message(chat_id, "🎉")
-                await bot.send_message(chat_id=chat_id, text=user_info, parse_mode="HTML")
-
-                address = await get_address(telegram_chat_id=chat_id)
-                if not address:
-                    await bot.send_message(chat_id, "Ошибка: адрес не найден.")
-                    return
-                
-                photo_filenames = [
-                    "./images/taobao.jpg", 
-                    "./images/pinduoduo.jpg", 
-                    "./images/poizon.jpg", 
-                    "./images/1688.jpg"
-                ]
-                media_group = [InputMediaPhoto(media=FSInputFile(filename)) for filename in photo_filenames]
-
-                kb = [[types.KeyboardButton(text="Главное меню")]]
-                keyboard = types.ReplyKeyboardMarkup(keyboard=kb, resize_keyboard=True)
-
-                await bot.send_message(chat_id=chat_id, text=address, reply_markup=keyboard, parse_mode="HTML")
-                await bot.send_media_group(chat_id=chat_id, media=media_group)
-
-
-                text = await get_text(key="check")
-                await bot.send_message(chat_id=chat_id, text=text, reply_markup=keyboard, parse_mode="HTML")
+            if not user:
+                await bot.send_message(chat_id, "❌ Ошибка: пользователь не найден.")
                 return
 
+            response = await get_profile_user(telegram_chat_id=chat_id)
+            if not response:
+                await bot.send_message(chat_id, "❌ Ошибка: профиль не найден.")
+                return
+            user_data = response[0]
+
+            user_info = (
+                f"🎉 Регистрация прошла успешно 🎉\n\n"
+                f"📃 Профиль 📃\n\n"
+                f"👤 ФИО: {user_data['name']}\n"
+                f"🌍 Город: {user_data['city']}\n"
+                f"📞 Номер: {user_data['number']}\n\n"
+                f"🪪 Код: KBK{user_data['numeric_code']}\n"
+            )
+            await bot.send_message(chat_id, "🎉")
+            await bot.send_message(chat_id=chat_id, text=user_info, parse_mode="HTML")
+
+            address = await get_address(telegram_chat_id=chat_id)
+            if not address:
+                await bot.send_message(chat_id, "❌ Ошибка: адрес не найден.")
+                return
+
+            photo_filenames = [
+                "./images/taobao.jpg",
+                "./images/pinduoduo.jpg",
+                "./images/poizon.jpg",
+                "./images/1688.jpg"
+            ]
+            media_group = [InputMediaPhoto(media=FSInputFile(filename)) for filename in photo_filenames]
+
+            kb = [[types.KeyboardButton(text="Главное меню")]]
+            keyboard = types.ReplyKeyboardMarkup(keyboard=kb, resize_keyboard=True)
+
+            await bot.send_message(chat_id=chat_id, text=address, reply_markup=keyboard, parse_mode="HTML")
+            await bot.send_media_group(chat_id=chat_id, media=media_group)
+
+            check_message = "📍 После заполнения адреса обязательно отправьте скриншот или любой контент нам на проверку"
+            inline_kb = InlineKeyboardMarkup(inline_keyboard=[
+                [InlineKeyboardButton(text="💬 Инструкция", callback_data="get_instruction")],
+                [InlineKeyboardButton(text="WhatsApp", url="https://wa.me/+1234567890")],
+                [InlineKeyboardButton(text="Проверка через Telegram", callback_data="start_screenshot_check")]
+            ])
+            await bot.send_message(chat_id=chat_id, text=check_message, reply_markup=inline_kb, parse_mode="HTML")
+
+            return
+
         except Exception as e:
-            print(f"[Попытка {attempt}] Ошибка при отправке сообщения пользователю {chat_id}: {e}")
             if attempt == max_retries:
-                print(f"❌ Все {max_retries} попытки неудачны.")
+                await bot.send_message(chat_id, "❌ Ошибка сервера. Попробуйте позже.")
 
 async def handle_update_success(chat_id: str, max_retries: int = 3):
     for attempt in range(1, max_retries + 1):

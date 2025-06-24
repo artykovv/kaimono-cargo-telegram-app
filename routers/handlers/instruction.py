@@ -13,6 +13,18 @@ async def helper(message: Message):
     ])
     await message.answer("💬 Инструкция по:", reply_markup=kb)
 
+@router.callback_query(F.data == "get_instruction")
+async def handle_instruction_callback(callback: CallbackQuery):
+    kb = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="1688", callback_data="1688")],
+        [InlineKeyboardButton(text="pinduoduo", callback_data="pinduoduo")],
+        [InlineKeyboardButton(text="poizon", callback_data="poizon")],
+        [InlineKeyboardButton(text="taobao", callback_data="taobao")]
+    ])
+
+    await callback.message.answer("💬 Инструкция по:", reply_markup=kb)
+    await callback.answer()
+
 @router.callback_query(F.data == "1688")
 async def search_product(callback: CallbackQuery):
     video = FSInputFile("video/1688.mp4")
