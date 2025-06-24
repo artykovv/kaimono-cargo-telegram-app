@@ -16,6 +16,7 @@ from routers.handlers.support import router as support
 from routers.handlers.helper import router as helper
 from routers.handlers.address import router as address
 from routers.handlers.instruction import router as instruction
+from routers.handlers.info import router as info
 
 
 from routers.handlers.main_products.productsBishkek import router as productsBishkek
@@ -23,7 +24,8 @@ from routers.handlers.main_products.productsChina import router as productsChina
 from routers.handlers.main_products.productsTransit import router as productsTransit
 
 
-from functions.register_success import router as test
+from functions.register_success import router as register_success
+
 
 bot = Bot(token=TOKEN)
 
@@ -42,6 +44,7 @@ dp.include_router(profile)
 dp.include_router(helper)
 dp.include_router(address)
 dp.include_router(instruction)
+dp.include_router(info)
 
 
 dp.include_router(productsBishkek)
@@ -49,6 +52,7 @@ dp.include_router(productsChina)
 dp.include_router(productsTransit)
 
 dp.include_router(support)
-dp.include_router(test)
+dp.include_router(register_success)
+
 
 
