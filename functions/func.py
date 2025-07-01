@@ -77,7 +77,7 @@ async def get_address(telegram_chat_id):
             f"Нажмите чтобы скопировать:\n\n"
             f"<code>{address['name1']}{user['numeric_code']}\n"
             f"{address['name2']}\n"
-            f"{address['name3']}{user['numeric_code']} ({user['number']})</code>"
+            f"{address['name3']}{user['numeric_code']}</code>"
         )
         return info
     
