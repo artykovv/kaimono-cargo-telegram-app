@@ -1,7 +1,7 @@
 from aiogram import Router, F
 from aiogram.types import Message, InputMediaPhoto, FSInputFile, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 
-from functions.func import get_profile_user, get_address, get_branches, update_branch 
+from functions.func import get_address_files, get_address, get_branches, update_branch 
 
 router = Router()
 
@@ -19,8 +19,12 @@ async def address(message: Message):
 async def china_address(callback: CallbackQuery):
     user_id = str(callback.message.chat.id)
     address = await get_address(telegram_chat_id=user_id)
-    photo_filenames = ["./images/taobao.jpg", "./images/pinduoduo.jpg", "./images/poizon.jpg", "./images/1688.jpg"]
-    media_group = [InputMediaPhoto(media=FSInputFile(filename)) for filename in photo_filenames]
+    photos_data = await get_address_files(file_type="photo")
+    active_photos = [photo for photo in photos_data if photo.get("active")]
+    media_group = [
+        InputMediaPhoto(media=photo["url"], caption=photo["name"])
+        for photo in active_photos
+    ]
 
     await callback.message.edit_text(address, parse_mode="HTML")
     await callback.message.answer_media_group(media=media_group)
@@ -98,8 +102,17 @@ async def cancel_branch_change(callback: CallbackQuery):
 # Функция для показа адреса Китая
 async def show_china_address(chat_id: str, message: Message):
     address = await get_address(telegram_chat_id=chat_id)
-    photo_filenames = ["./images/taobao.jpg", "./images/pinduoduo.jpg", "./images/poizon.jpg", "./images/1688.jpg"]
-    media_group = [InputMediaPhoto(media=FSInputFile(filename)) for filename in photo_filenames]
+    photos_data = await get_address_files(file_type="photo")
+    active_photos = [photo for photo in photos_data if photo.get("active")]
+    media_group = [
+        InputMediaPhoto(media=photo["url"], caption=photo["name"])
+        for photo in active_photos
+    ]
 
     await message.answer(address, parse_mode="HTML")
-    await message.answer_media_group(media=media_group)
+
+    # Только если есть фото
+    if media_group:
+        await message.answer_media_group(media=media_group)
+    else:
+        await message.answer("Нет доступных фото.")

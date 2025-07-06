@@ -116,7 +116,8 @@ async def get_address_files(file_type: str):
         raise ValueError("file_type must be 'photo' or 'video'")
     
     async with httpx.AsyncClient() as client:
-        url = f"{host}/address-file/{file_type}"
+        url = f"{host}/address/{file_type}"
         response = await client.get(url=url, headers=headers)
         response.raise_for_status()  # на всякий случай
         return response.json()
+    

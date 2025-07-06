@@ -5,7 +5,7 @@ from aiogram.types import InputMediaPhoto
 
 from typing import List
 from bot import bot
-from functions.func import get_address, get_all_users_telegram_chat_ids, get_profile_user, get_text, validate_user_telegram_chat_id
+from functions.func import get_address, get_all_users_telegram_chat_ids, get_profile_user, get_text, validate_user_telegram_chat_id, get_address_files
 
 
 async def handle_broadcast_text(text: str, chat_ids: list[int] = None):
@@ -174,13 +174,12 @@ async def handle_register_success(chat_id: str, max_retries: int = 3):
                 await bot.send_message(chat_id, "❌ Ошибка: адрес не найден.")
                 return
 
-            photo_filenames = [
-                "./images/taobao.jpg",
-                "./images/pinduoduo.jpg",
-                "./images/poizon.jpg",
-                "./images/1688.jpg"
+            photos_data = await get_address_files(file_type="photo")
+            active_photos = [photo for photo in photos_data if photo.get("active")]
+            media_group = [
+                InputMediaPhoto(media=photo["url"], caption=photo["name"])
+                for photo in active_photos
             ]
-            media_group = [InputMediaPhoto(media=FSInputFile(filename)) for filename in photo_filenames]
 
             kb = [[types.KeyboardButton(text="Главное меню")]]
             keyboard = types.ReplyKeyboardMarkup(keyboard=kb, resize_keyboard=True)
