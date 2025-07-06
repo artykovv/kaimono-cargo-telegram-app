@@ -73,11 +73,16 @@ async def get_address(telegram_chat_id):
         user_data = await get_profile_user(telegram_chat_id=telegram_chat_id)
         user = user_data[0]
         address = response.json()
+
+        number = user['number']
+        if number.startswith('+996'):
+            number = number[4:]
+            
         info = (
             f"Нажмите чтобы скопировать:\n\n"
             f"<code>{address['name1']}{user['numeric_code']}\n"
             f"{address['name2']}\n"
-            f"{address['name3']}{user['numeric_code']}</code>"
+            f"{address['name3']}{user['numeric_code']} ({number})</code>"
         )
         return info
     
@@ -105,3 +110,13 @@ async def get_text(key: str):
             return e.response  # Возвращаем ответ с ошибкой для дальнейшей обработки
         except Exception as e:
             return httpx.Response(status_code=500, text=str(e))
+        
+async def get_address_files(file_type: str):
+    if file_type not in ("photo", "video"):
+        raise ValueError("file_type must be 'photo' or 'video'")
+    
+    async with httpx.AsyncClient() as client:
+        url = f"{host}/address-file/{file_type}"
+        response = await client.get(url=url, headers=headers)
+        response.raise_for_status()  # на всякий случай
+        return response.json()
